@@ -1,0 +1,50 @@
+body {
+    font-family: 'Verdana', 'Arial', 'Sans-Serif';
+    margin: 50px auto;
+    max-width: 900px;
+    background-color: #24292e;
+    color: white;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 3em;
+}
+
+p, button, input {
+    font-size: 1.5em;
+    line-height: 1.4em;
+    margin-bottom:1em;
+}
+
+#battlefield {
+    width: 1px;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    background-color: #24292e !important;
+}
+
+.container {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+}
+
+.square {
+    height: 35px;
+    width: 35px;
+    margin: 1px;
+    background-color: white;
+}
+
+@media (max-width: 900px) {
+    .container {
+        grid-template-rows: 1fr;
+        grid-template-columns: 1fr;
+    }
+
+    body {
+        max-width: 450px;
+    }
+}
