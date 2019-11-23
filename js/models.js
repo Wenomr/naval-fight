@@ -7,12 +7,6 @@ shotsTypes = {
     killed  : "red"
 }
 
-shipsType = {
-    triple : {LENGTH: 3, COUNT: 2},
-    double : {LENGTH: 2, COUNT: 3},
-    single : {LENGTH: 1, COUNT: 4}
-}
-
 function randomNumber(range) {
     return Math.floor (Math.random() * (range - 1));
 }
@@ -104,7 +98,7 @@ class Board {
                     }
                 }
 
-                // создаем корабль и добавляем в него ячейки
+                // creating new ship, with id and coordinates: Position.
                 let newShip = new Ship(i, coordinates);
 
                 this.ships.push(newShip);
@@ -112,7 +106,7 @@ class Board {
             }
         }
     }
-
+    // check if any ships can be crossed by new ship
     isShipsAround = (xCoordinate, yCoordinate, isVertical, shipLength) => {
 
         let topLeftPos = new Position(xCoordinate - 1, yCoordinate - 1);
@@ -149,9 +143,8 @@ class Board {
             });
         });
     }
-
+    // need a little more refactoring
     checkIfShipDead = (id) => {
-        let dead = true;
         const cellIds = [];
         this.ships.forEach((ship) => {
             if (ship.id === id) {
