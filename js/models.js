@@ -106,7 +106,7 @@ class Board {
             }
         }
     }
-    // check if any ships can be crossed by new ship
+    // check if any ships can be crossed by new around,
     isShipsAround = (xCoordinate, yCoordinate, isVertical, shipLength) => {
 
         let topLeftPos = new Position(xCoordinate - 1, yCoordinate - 1);
@@ -143,8 +143,9 @@ class Board {
             });
         });
     }
-    // need a little more refactoring
+
     checkIfShipDead = (id) => {
+        let dead = true;
         const cellIds = [];
         this.ships.forEach((ship) => {
             if (ship.id === id) {
