@@ -16,8 +16,6 @@ class Cell {
     constructor(pos, ship) {
         this.id = `s${pos.x}${pos.y}`;
         this.pos = pos;
-        this.ship = ship;
-        this.isFired = false;
     }
 
 }
@@ -38,15 +36,14 @@ class Ship {
 }
 
 class Board {
-    constructor () {
+    constructor (boats = [4,3,3,3,2,2,1,1]) {
         this.fieldHeight = 10;
         this.fieldWidth = 10;
         this.ships = [];
         this.shipNumber = 4;
         this.cellWidgets = [];
         this.initCells();
-        this.initShips([4,3,3,3,2,1,1]);
-        
+        this.initShips(boats);
     }
 
     initCells = () => {
@@ -107,15 +104,15 @@ class Board {
         }
     }
     // check if any ships can be crossed by new around,
-    isShipsAround = (xCoordinate, yCoordinate, isVertical, shipLength) => {
+    isShipsAround = (xValue, yValue, isVertical, shipLength) => {
 
-        let topLeftPos = new Position(xCoordinate - 1, yCoordinate - 1);
+        let topLeftPos = new Position(xValue - 1, yValue - 1);
 
         let bottomRightPos = null;
         if (isVertical) {
-            bottomRightPos = new Position(xCoordinate + 1, yCoordinate + shipLength);
+            bottomRightPos = new Position(xValue + 1, yValue + shipLength);
         } else {
-            bottomRightPos = new Position(xCoordinate + shipLength, yCoordinate + 1);
+            bottomRightPos = new Position(xValue + shipLength, yValue + 1);
         }
 
         let isShipExistInArea = false;
@@ -140,6 +137,7 @@ class Board {
                 let id = `s${position.x}${position.y}`;
                 let targetCell = document.getElementById(`${id}`);
                 targetCell.style.backgroundColor = 'green';
+                
             });
         });
     }
@@ -170,7 +168,10 @@ class Board {
     }
 
     shotHandler = (element) => {
-        let id = element.toElement.id;
+        let id = element.target.id;
+        if (id == "battlefield") {
+            return;
+        }
         let message = `Shooting to cell ${id}`; 
         let color = "grey";
         let checkShipId = "";

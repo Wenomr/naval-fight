@@ -1,5 +1,5 @@
 body {
-    font-family: 'Verdana', 'Arial', 'Sans-Serif';
+    font-family: 'Roboto', 'Arial', 'Sans-Serif';
     margin: 50px auto;
     max-width: 900px;
     background-color: #24292e;
@@ -23,6 +23,10 @@ p, button, input {
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     background-color: #24292e !important;
+}
+
+#toggle-light-btn {
+	font-size: 1em;
 }
 
 .container {
