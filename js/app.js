@@ -8,7 +8,7 @@ board.cellWidgets.forEach((cell) => {
     // uses css grid to make field
     let square = document.createElement("div");
     // give each div element a unique id based on its row and column, like "s00"
-    square.id = 's' + cell.pos.x + cell.pos.y;
+    square.id = 's' + cell.x + cell.y;
     square.classList.add("square");
     
     gameBoardBox.appendChild(square);
@@ -19,3 +19,7 @@ document.querySelector("#battlefield")
 
 document.querySelector("#toggle-light-btn")
     .addEventListener("click", board.lightAllShips, false);
+
+document.querySelector("#restart-btn")
+    .addEventListener("click", () => location.reload(), false);
+    

@@ -11,10 +11,14 @@ h1 {
     font-size: 3em;
 }
 
-p, button, input {
+p, input {
     font-size: 1.5em;
     line-height: 1.4em;
     margin-bottom:1em;
+}
+
+button {
+	font-size: 1em;
 }
 
 #battlefield {
@@ -25,9 +29,7 @@ p, button, input {
     background-color: #24292e !important;
 }
 
-#toggle-light-btn {
-	font-size: 1em;
-}
+
 
 .container {
     display: grid;

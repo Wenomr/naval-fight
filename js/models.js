@@ -7,26 +7,34 @@ shotsTypes = {
     killed  : "red"
 }
 
-function randomNumber(range) {
+const randomNumber = (range) => {
     return Math.floor (Math.random() * (range - 1));
 }
 
-// Cell stores cell info: id, position (x, y) and status 'shoted'
+const isDead = (elem) => {
+    elem.isFired;
+}
+
+// Cell stores cell info: id, Cell (x, y) and status 'shoted'
 class Cell {
-    constructor(pos, ship) {
-        this.id = `s${pos.x}${pos.y}`;
-        this.pos = pos;
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.id = `s${x}${y}`;
+        this.isFired = false;
     }
 
 }
-// Position stores position info: x, y
-class Position {
-    constructor (x, y, damaged = false) {
-        this.x = x;
-        this.y = y;
-        this.damaged = damaged;
-    }
-}
+// // Cell stores Cell info: x, y
+// class Cell {
+//     constructor (x, y, isFired = false) {
+//         this.x = x;
+//         this.y = y;
+//         this.isFired = isFired;
+//         this.isFired = false;
+//     }
+// }
+
 // Ship stores ship's info
 class Ship {
     constructor (id = 1, coordinates) {
@@ -40,6 +48,7 @@ class Board {
         this.fieldHeight = 10;
         this.fieldWidth = 10;
         this.ships = [];
+        this.ships_dead = 0;
         this.shipNumber = 4;
         this.cellWidgets = [];
         this.initCells();
@@ -49,8 +58,7 @@ class Board {
     initCells = () => {
         for (let i = 0; i < this.fieldWidth; i++) {
             for (let j = 0; j < this.fieldHeight; j++) {
-                let pos = new Position(i, j);
-                let cell = new Cell(pos, null);
+                let cell = new Cell(i, j);
                 this.cellWidgets.push(cell);
             }
         }
@@ -87,15 +95,15 @@ class Board {
 
                 if (isVertical) {
                     for (let i = y; i < (y + shipLength); i++) {
-                        coordinates.push(new Position(x, i))
+                        coordinates.push(new Cell(x, i))
                     }
                 } else { // horizontal
                     for (let i = x; i < (x + shipLength); i++) {
-                        coordinates.push(new Position(i, y));
+                        coordinates.push(new Cell(i, y));
                     }
                 }
 
-                // creating new ship, with id and coordinates: Position.
+                // creating new ship, with id and coordinates: Cell.
                 let newShip = new Ship(i, coordinates);
 
                 this.ships.push(newShip);
@@ -106,22 +114,22 @@ class Board {
     // check if any ships can be crossed by new around,
     isShipsAround = (xValue, yValue, isVertical, shipLength) => {
 
-        let topLeftPos = new Position(xValue - 1, yValue - 1);
+        let topLeftCell = new Cell(xValue - 1, yValue - 1);
 
-        let bottomRightPos = null;
+        let bottomRightCell = null;
         if (isVertical) {
-            bottomRightPos = new Position(xValue + 1, yValue + shipLength);
+            bottomRightCell = new Cell(xValue + 1, yValue + shipLength);
         } else {
-            bottomRightPos = new Position(xValue + shipLength, yValue + 1);
+            bottomRightCell = new Cell(xValue + shipLength, yValue + 1);
         }
 
         let isShipExistInArea = false;
 
-        for (let i = topLeftPos.x; i <= bottomRightPos.x; i++) {
-            for (let j = topLeftPos.y; j <= bottomRightPos.y; j++) {
+        for (let i = topLeftCell.x; i <= bottomRightCell.x; i++) {
+            for (let j = topLeftCell.y; j <= bottomRightCell.y; j++) {
                 this.ships.forEach((ship) => {
-                    ship.coordinates.forEach((posExisted) => {
-                        if (j == posExisted.y && i == posExisted.x) {
+                    ship.coordinates.forEach((cellExisted) => {
+                        if (j == cellExisted.y && i == cellExisted.x) {
                             isShipExistInArea = true;
                         }
                     });
@@ -133,8 +141,8 @@ class Board {
 
     lightAllShips = () => {
         this.ships.forEach((ship) => {
-            ship.coordinates.forEach((position) => {
-                let id = `s${position.x}${position.y}`;
+            ship.coordinates.forEach((cell) => {
+                let id = `s${cell.x}${cell.y}`;
                 let targetCell = document.getElementById(`${id}`);
                 targetCell.style.backgroundColor = 'green';
                 
@@ -144,54 +152,81 @@ class Board {
 
     checkIfShipDead = (id) => {
         let dead = true;
-        const cellIds = [];
         this.ships.forEach((ship) => {
             if (ship.id === id) {
-                ship.coordinates.forEach((pos) => {
-                    if (pos.damaged !== false) {
+                ship.coordinates.forEach((el) => {
+                    if (el.isFired == false) {
                         dead = false;
-                        cellIds.push(`s${pos.x}${pos.y}`);
-                        if (cellIds.length === ship.coordinates.length) {
-                            cellIds.forEach((cellid) => {
-                                let targetCell = document.getElementById(`${cellid}`);
-                                if (targetCell !== null) {
-                                    targetCell.style.backgroundColor = 'red';
-                                }
-                            });
-                            let logs = document.querySelector(`#log`);
-                            logs.value += `\nShip id: ${id}, with length of ${ship.coordinates.length} has been destroyed!`;
-                        }
                     }
                 });
             }
         });
+        console.log(dead);
+        return dead;
     }
 
     shotHandler = (element) => {
+        let color = "grey";
+
         let id = element.target.id;
         if (id == "battlefield") {
             return;
         }
+        let logs = document.querySelector(`#log`);
+        let targetCell = document.querySelector(`#${id}`);
+        
+        this.cellWidgets.forEach((cell) => {
+            if (cell.id == id) {
+                if (cell.isFired == true) {
+                    alert("This field is already used");
+                    return;
+                }
+                cell.isFired = true;
+            }
+        });
         let message = `Shooting to cell ${id}`; 
-        let color = "grey";
         let checkShipId = "";
         this.ships.forEach((ship) => {
-            ship.coordinates.forEach((pos) => {
-                if (id === `s${pos.x}${pos.y}`) {
-                    color = "orange";
-                    pos.damaged = true;
+            ship.coordinates.forEach((cell) => {
+                if (id === `s${cell.x}${cell.y}`) {
+                    
+                    cell.isFired = true;
                     checkShipId = ship.id;
-                    message += ` ship injured!`;
+                    if (this.checkIfShipDead(checkShipId)) {
+                        this.ships_dead += 1;
+                        message += ` ship id ${ship.id} is dead!`;
+                        this.ships.length == this.ships_dead && alert('All ships has been destroyed!');
+                    } 
+                    else {
+                        message += ` ship injured!`;
+                        color = "orange";
+                    }
                 }
             });
         });
-        let targetCell = document.querySelector(`#${id}`);
-        let logs = document.querySelector(`#log`);
+
+        
         logs.value += `\n${message}`;
         if (targetCell === null) {
             return;
         }
         targetCell.style.backgroundColor = color;
-        this.checkIfShipDead(checkShipId);
+        if (this.checkIfShipDead(checkShipId)) {
+            this.paintShipRed(checkShipId);
+        }
+
+    }
+
+    paintShipRed = (id) => {
+        this.ships.forEach((ship) => {
+            if (ship.id == id) {
+                ship.coordinates.forEach((cell) => {
+                    console.log(cell.id);
+                    let targetCell = document.querySelector(`#${cell.id}`);
+                    console.log(targetCell);
+                    targetCell.style.backgroundColor = 'red';
+                });
+            }
+        });  
     }
 }
