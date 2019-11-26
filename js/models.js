@@ -1,12 +1,5 @@
 const gameBoardBox = document.querySelector("#battlefield");
 
-shotsTypes = {
-    empty   : "white",
-    missed  : "grey",
-    injured : "orange",
-    killed  : "red"
-}
-
 const randomNumber = (range) => {
     return Math.floor (Math.random() * (range - 1));
 }
@@ -25,15 +18,6 @@ class Cell {
     }
 
 }
-// // Cell stores Cell info: x, y
-// class Cell {
-//     constructor (x, y, isFired = false) {
-//         this.x = x;
-//         this.y = y;
-//         this.isFired = isFired;
-//         this.isFired = false;
-//     }
-// }
 
 // Ship stores ship's info
 class Ship {
